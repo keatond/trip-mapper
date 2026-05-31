@@ -1,0 +1,30 @@
+{
+  "trip": "Rome",
+  "generated_by": "tools/gen-demo-photos.mjs",
+  "files": [
+    {
+      "file": "01-colosseum.jpg",
+      "label": "Colosseum"
+    },
+    {
+      "file": "02-roman-forum.jpg",
+      "label": "Roman Forum"
+    },
+    {
+      "file": "03-pantheon.jpg",
+      "label": "Pantheon"
+    },
+    {
+      "file": "04-trevi.jpg",
+      "label": "Trevi Fountain"
+    },
+    {
+      "file": "05-st-peters.jpg",
+      "label": "St. Peter's"
+    },
+    {
+      "file": "06-spanish-steps.jpg",
+      "label": "Spanish Steps"
+    }
+  ]
+}
