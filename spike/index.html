@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trip Mapper — Google Photos Data-Access Spike</title>
+  <style>
+    body { font: 14px/1.5 system-ui, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
+    header { padding: 16px 20px; background: #1e293b; border-bottom: 1px solid #334155; }
+    h1 { font-size: 18px; margin: 0 0 4px; }
+    .sub { color: #94a3b8; font-size: 13px; }
+    main { padding: 20px; max-width: 1000px; }
+    button { font: inherit; padding: 8px 14px; border-radius: 6px; border: 1px solid #475569;
+             background: #334155; color: #e2e8f0; cursor: pointer; margin-right: 8px; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    button.primary { background: #2563eb; border-color: #2563eb; }
+    .step { margin: 14px 0; padding: 12px 14px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; }
+    .step h2 { font-size: 14px; margin: 0 0 8px; color: #93c5fd; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #0b1220; color: #cbd5e1;
+          padding: 10px; border-radius: 6px; max-height: 320px; overflow: auto; font-size: 12px; }
+    .ok { color: #4ade80; } .bad { color: #f87171; } .warn { color: #fbbf24; }
+    .item { border-top: 1px solid #334155; padding-top: 10px; margin-top: 10px; }
+    img.thumb { max-width: 160px; border-radius: 4px; display: block; margin: 6px 0; }
+    code { background: #0b1220; padding: 1px 5px; border-radius: 4px; }
+    .config-warn { background: #7f1d1d; border-color: #b91c1c; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Google Photos Data-Access Spike</h1>
+    <div class="sub">Tests whether the Picker API gives us <strong>GPS + timestamp</strong> —
+      in metadata, or via downloading original bytes (<code>baseUrl=d</code>) and parsing EXIF.</div>
+  </header>
+
+  <main>
+    <div id="configWarn" class="step config-warn" hidden>
+      <h2>⚠ Client ID not set</h2>
+      <div>Edit <code>spike/config.js</code> and paste your OAuth Client ID (see <code>SETUP.md</code>), then reload.</div>
+    </div>
+
+    <div class="step">
+      <h2>Step 1 — Sign in &amp; pick photos</h2>
+      <button id="authBtn" class="primary">Sign in with Google</button>
+      <button id="pickBtn" disabled>Open photo picker</button>
+      <button id="fetchBtn" disabled>Fetch picked items</button>
+      <div id="authStatus" class="sub">Not signed in.</div>
+    </div>
+
+    <div class="step">
+      <h2>Step 2 — Raw <code>mediaMetadata</code> (Q1: is GPS in here?)</h2>
+      <div class="sub">The unedited JSON Google returns for each picked item. Look for any
+        latitude/longitude/location field.</div>
+      <pre id="rawDump">(pick photos first)</pre>
+    </div>
+
+    <div class="step">
+      <h2>Step 3 — Byte download + EXIF (Q2: GPS in the original? · Q3: CORS?)</h2>
+      <div class="sub">For each item: try a <em>direct browser</em> download (expected to CORS-fail),
+        then a <em>proxied</em> download, then parse EXIF for lat/lon/timestamp.</div>
+      <div id="items"></div>
+    </div>
+
+    <div class="step">
+      <h2>Step 4 — Capture FINDINGS (Q1/Q2/Q3 + GO/NO-GO)</h2>
+      <div class="sub">After fetching items, this compiles a copy-pasteable block from the
+        <strong>actual run results</strong> above — drop it straight into <code>FINDINGS.md</code>.</div>
+      <button id="findingsBtn" class="primary" disabled>Copy FINDINGS</button>
+      <textarea id="findingsOut" readonly rows="16"
+        style="width:100%; margin-top:10px; background:#0b1220; color:#cbd5e1; border:1px solid #334155;
+               border-radius:6px; padding:10px; font:12px/1.5 ui-monospace, monospace; white-space:pre;"
+        placeholder="(fetch picked items first, then click ‘Copy FINDINGS’)"></textarea>
+    </div>
+
+    <div class="step">
+      <h2>Log</h2>
+      <pre id="log"></pre>
+    </div>
+  </main>
+
+  <!-- Google Identity Services (token flow) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- exifr for in-browser EXIF parsing of downloaded bytes -->
+  <script src="https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/full.umd.js"></script>
+  <script type="module" src="spike.js"></script>
+</body>
+</html>

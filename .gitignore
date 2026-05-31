@@ -1,0 +1,11 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Local Claude Code project settings
+.claude/
+
+# Node (deps live in /tmp scratch dirs, never in the repo)
+node_modules/
