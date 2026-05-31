@@ -1,0 +1,97 @@
+/* css/tokens.css
+ * Trip Mapper design system — single source of truth for the
+ * photography-forward visual language. See DESIGN.md for rationale.
+ * Every component stylesheet (shell, cards, map, states, empty) must
+ * reference these custom properties rather than hard-coding values.
+ */
+
+:root {
+  /* ---- Surfaces ---------------------------------------------------- */
+  --bg: #faf8f5;            /* app canvas — warm off-white */
+  --surface: #ffffff;       /* cards, panels */
+  --surface-2: #f4f1ec;     /* inset / subtle raised */
+  --chrome: #1c1714;        /* dark header bar — lets photos pop */
+  --chrome-2: #2a231e;      /* raised element on chrome */
+  --chrome-ink: #faf6f1;    /* text on dark chrome */
+  --chrome-muted: #b8aa9e;  /* muted text on dark chrome */
+
+  /* ---- Ink --------------------------------------------------------- */
+  --ink: #1c1714;           /* primary text — warm near-black */
+  --ink-2: #44403c;         /* secondary text */
+  --muted: #837a72;         /* tertiary / meta */
+  --line: #e8e3dc;          /* hairline borders */
+  --line-strong: #d8d1c7;   /* stronger dividers */
+
+  /* ---- Brand / accents -------------------------------------------- */
+  --accent: #c2410c;        /* burnt-orange brand + interactive */
+  --accent-hover: #9a3412;
+  --accent-soft: #fdecdc;   /* tinted fill behind accent */
+  --accent-ink: #ffffff;    /* text on accent */
+  --sea: #0f766e;           /* deep teal — the "journey" / route color */
+  --sea-hover: #0b5c55;
+  --sea-soft: #d6efe9;
+
+  /* ---- Feedback ---------------------------------------------------- */
+  --ok: #15803d;
+  --ok-soft: #dcfce7;
+  --warn: #b45309;
+  --warn-soft: #fef3c7;
+  --danger: #b3261e;
+  --danger-soft: #fbe3e1;
+
+  /* ---- Typography -------------------------------------------------- */
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.825rem;
+  --fs-base: 0.95rem;
+  --fs-md: 1.1rem;
+  --fs-lg: 1.35rem;
+  --fs-xl: 1.75rem;
+  --fs-display: clamp(1.5rem, 1.1rem + 1.6vw, 2.2rem);
+
+  --lh-tight: 1.15;
+  --lh: 1.55;
+
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.04em;
+
+  /* ---- Spacing scale ---------------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+
+  /* ---- Radii ------------------------------------------------------- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --r-full: 999px;
+
+  /* ---- Elevation --------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(28, 23, 20, 0.06), 0 1px 3px rgba(28, 23, 20, 0.07);
+  --shadow-md: 0 4px 14px rgba(28, 23, 20, 0.10), 0 2px 4px rgba(28, 23, 20, 0.06);
+  --shadow-lg: 0 16px 40px rgba(28, 23, 20, 0.18), 0 4px 10px rgba(28, 23, 20, 0.08);
+
+  /* ---- Motion ------------------------------------------------------ */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 0.18s;
+  --dur-slow: 0.34s;
+
+  /* ---- Focus ring -------------------------------------------------- */
+  --focus-ring: 0 0 0 3px var(--sea-soft), 0 0 0 1.5px var(--sea);
+
+  /* ---- Layout ------------------------------------------------------ */
+  --sidebar-w: 360px;
+}
+
+/* Respect reduced-motion preferences globally. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur: 0.001s; --dur-slow: 0.001s; }
+}

@@ -1,0 +1,129 @@
+/* css/empty.css — rich empty state (overlaid on the map) + demo-trip banner.
+ * Content is injected by js/app.js into #emptyState and #demoBanner.
+ */
+
+.empty-state[hidden],
+.demo-banner[hidden] { display: none; }
+
+/* ---- Empty state overlay ----------------------------------------- */
+.empty-state {
+  position: absolute;
+  inset: 0;
+  z-index: 450;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-5);
+  pointer-events: none;        /* let the map stay interactive around the card */
+  background:
+    radial-gradient(120% 80% at 50% 40%, rgba(250, 248, 245, 0.55), rgba(250, 248, 245, 0.9));
+}
+
+.empty-card {
+  pointer-events: auto;
+  max-width: 380px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--sp-6) var(--sp-5);
+  animation: empty-rise var(--dur-slow) var(--ease-out) both;
+}
+@keyframes empty-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.empty-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: var(--sp-3);
+  border-radius: var(--r-lg);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.empty-card__title {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-xl);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+}
+.empty-card__text {
+  margin: 0 0 var(--sp-4);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.empty-card__text code {
+  font-size: 0.85em;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 1px 5px;
+}
+.empty-card__btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: linear-gradient(140deg, var(--accent), var(--accent-hover));
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--r-full);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease);
+}
+.empty-card__btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.empty-card__btn:active { transform: translateY(0); }
+
+/* ---- Demo banner (in the sidebar) -------------------------------- */
+.demo-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-3);
+  border: 1px solid color-mix(in srgb, var(--sea) 30%, var(--line));
+  border-radius: var(--r-full);
+  background: var(--sea-soft);
+}
+.demo-banner__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--sea-hover);
+}
+.demo-banner__dot {
+  width: 8px; height: 8px;
+  border-radius: var(--r-full);
+  background: var(--sea);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sea) 25%, transparent);
+}
+.demo-banner__clear {
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--sea-hover);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--sea) 35%, var(--line));
+  border-radius: var(--r-full);
+  padding: var(--sp-1) var(--sp-3);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.demo-banner__clear:hover { background: var(--sea); color: #fff; }
+
+@media (max-width: 480px) {
+  .empty-card { padding: var(--sp-5) var(--sp-4); }
+  .empty-card__title { font-size: var(--fs-lg); }
+}

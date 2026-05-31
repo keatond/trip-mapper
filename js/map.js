@@ -13,6 +13,51 @@ let map = null;
 let clusterGroup = null;
 let routeLine = null;
 let tripMarkers = [];
+let photoIcon = null;
+
+/**
+ * Read a design token from the document root, with a hard fallback so node
+ * imports (which never call the browser paths) and missing-CSS cases are safe.
+ */
+function cssVar(name, fallback) {
+  if (typeof document === "undefined") return fallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+
+/** The route polyline color — the teal "journey" token (--sea). */
+function routeColor() {
+  return cssVar("--sea", "#0f766e");
+}
+
+/** Brand color for pins + cluster bubbles (--accent). */
+function pinColor() {
+  return cssVar("--accent", "#c2410c");
+}
+
+/**
+ * A single photo marker: a brand-colored teardrop pin (data-URI SVG). Kept as a
+ * raster-style L.icon (an <img class="leaflet-marker-icon">) rather than a
+ * divIcon so the marker-cluster collapse/split machinery and the e2e selectors
+ * that count "img.leaflet-marker-icon" keep working.
+ */
+function getPhotoIcon() {
+  if (photoIcon) return photoIcon;
+  const fill = pinColor();
+  const svg =
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 38' width='26' height='38'>` +
+    `<path d='M13 1C6.4 1 1 6.4 1 13c0 9 12 23 12 23s12-14 12-23C25 6.4 19.6 1 13 1z' ` +
+    `fill='${fill}' stroke='white' stroke-width='1.6'/>` +
+    `<circle cx='13' cy='13' r='4.6' fill='white'/></svg>`;
+  photoIcon = L.icon({
+    iconUrl: "data:image/svg+xml," + encodeURIComponent(svg),
+    iconSize: [26, 38],
+    iconAnchor: [13, 38],
+    popupAnchor: [0, -32],
+    className: "tm-photo-pin",
+  });
+  return photoIcon;
+}
 
 /**
  * Pure decision: should the route polyline be visible at all?
@@ -100,17 +145,19 @@ export function initMap() {
  */
 function makeClusterIcon(cluster) {
   const count = cluster.getChildCount();
-  // SVG teardrop tuned to Leaflet's marker blue (#2A81CB) with a white outline;
-  // the count sits in the round head. viewBox is taller-than-wide like a pin.
-  const html = `<div class="tm-cluster"><svg viewBox="0 0 24 36" width="34" height="40" aria-hidden="true">` +
-    `<path d="M12 0.5C5.6 0.5 0.5 5.6 0.5 12c0 8.6 11.5 23.5 11.5 23.5S23.5 20.6 23.5 12C23.5 5.6 18.4 0.5 12 0.5z" fill="#2A81CB" stroke="#fff" stroke-width="1.2"/>` +
+  // A brand-colored SVG teardrop (matching the single photo pins for a cohesive
+  // map identity) with the child count in its head. Kept pin-shaped (not a round
+  // bubble) and slightly larger than a single pin so groups read at a glance.
+  const fill = pinColor();
+  const html = `<div class="tm-cluster"><svg viewBox="0 0 24 36" width="36" height="42" aria-hidden="true">` +
+    `<path d="M12 0.5C5.6 0.5 0.5 5.6 0.5 12c0 8.6 11.5 23.5 11.5 23.5S23.5 20.6 23.5 12C23.5 5.6 18.4 0.5 12 0.5z" fill="${fill}" stroke="#fff" stroke-width="1.4"/>` +
     `<text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="11" font-weight="700" font-family="system-ui, sans-serif">${count}</text>` +
     `</svg></div>`;
   return L.divIcon({
     html,
     className: "tm-cluster-wrap",
-    iconSize: L.point(34, 40),
-    iconAnchor: L.point(17, 40), // pin tip at the cluster location
+    iconSize: L.point(36, 42),
+    iconAnchor: L.point(18, 42), // pin tip at the cluster location
   });
 }
 
@@ -133,7 +180,7 @@ export function renderMap(trip) {
   const pts = trip.photos.map((p) => [p.lat, p.lon]);
 
   trip.photos.forEach((p, i) => {
-    const marker = L.marker([p.lat, p.lon]);
+    const marker = L.marker([p.lat, p.lon], { icon: getPhotoIcon() });
     // Stash the photo's timestamp + position so the route builder can order
     // and place points without re-deriving them from the trip.
     marker._tmTs = p.ts instanceof Date ? p.ts.getTime() : Number(p.ts) || 0;
@@ -199,7 +246,9 @@ function updateRoute() {
   }
   if (pts.length < 2) return;
 
-  routeLine = L.polyline(pts, { color: "#b45309", weight: 3, opacity: 0.8 });
+  routeLine = L.polyline(pts, {
+    color: routeColor(), weight: 4, opacity: 0.85, lineJoin: "round", lineCap: "round",
+  });
   routeLine.addTo(map);
 }
 
@@ -231,7 +280,10 @@ function buildPopup(p, i, time) {
 
   const cap = document.createElement("div");
   cap.className = "popup-caption";
-  cap.innerHTML = `#${i + 1} · ${escapeHtml(p.name || "")}<br>${escapeHtml(time)}`;
+  cap.innerHTML =
+    `<span class="popup-stop">Stop ${i + 1}</span>` +
+    `<span class="popup-name">${escapeHtml(p.name || "")}</span>` +
+    (time ? `<span class="popup-time">${escapeHtml(time)}</span>` : "");
   root.appendChild(cap);
 
   return root;

@@ -1,0 +1,183 @@
+/* css/shell.css — app shell: global reset, header chrome, layout,
+ * sidebar, dropzone, map pane, and responsive behavior.
+ * Owns the overall composition; component internals live in cards/map/states/empty.
+ */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: var(--lh);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;            /* panes scroll internally; page never does */
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--r-sm);
+}
+
+/* ---- Header chrome ------------------------------------------------- */
+.app-header {
+  background: linear-gradient(180deg, var(--chrome-2), var(--chrome));
+  color: var(--chrome-ink);
+  border-bottom: 2px solid var(--accent);
+  z-index: 600;
+  flex-shrink: 0;
+}
+.app-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-5);
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: var(--r-md);
+  background: linear-gradient(140deg, var(--accent), var(--accent-hover));
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+.brand-text { min-width: 0; }
+.brand-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-xl);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1;
+}
+.tagline {
+  margin: 0.25rem 0 0;
+  font-size: var(--fs-sm);
+  color: var(--chrome-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Layout ------------------------------------------------------- */
+.layout {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  box-shadow: 1px 0 0 var(--line), var(--shadow-sm);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 10px; }
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: var(--r-full);
+  border: 3px solid var(--surface);
+}
+
+/* ---- Dropzone ----------------------------------------------------- */
+.dropzone {
+  border: 2px dashed var(--line-strong);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5) var(--sp-4);
+  min-height: 112px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease),
+              transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  user-select: none;
+  background:
+    radial-gradient(120% 100% at 50% 0%, var(--surface-2), var(--surface));
+}
+.dropzone:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+.dropzone:focus-visible { border-color: var(--sea); }
+.dropzone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.dropzone__icon {
+  display: inline-flex;
+  color: var(--accent);
+  margin-bottom: var(--sp-2);
+}
+.dropzone-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--fs-base);
+  color: var(--ink);
+}
+.dropzone-hint {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ---- Map pane ----------------------------------------------------- */
+.map-pane {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  background: var(--surface-2);
+}
+#map {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---- Responsive: stack on narrow screens -------------------------- */
+@media (max-width: 760px) {
+  .layout { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    max-height: 48%;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+  }
+  .app-header__inner { padding: var(--sp-3) var(--sp-4); }
+}
+
+@media (max-width: 480px) {
+  .brand-mark { width: 36px; height: 36px; }
+  .brand-title { font-size: var(--fs-lg); }
+  .tagline { font-size: var(--fs-xs); }
+  .dropzone { padding: var(--sp-4) var(--sp-3); }
+}

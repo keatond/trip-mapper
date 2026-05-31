@@ -1,0 +1,114 @@
+/* css/map.css — map identity: popups, photo pins, cluster bubbles, controls.
+ * Pins + cluster are brand-colored SVGs built in js/map.js; this file themes
+ * the surrounding Leaflet chrome (popups, layer toggle, zoom, attribution).
+ */
+
+/* ---- Photo pins --------------------------------------------------- */
+.tm-photo-pin {
+  filter: drop-shadow(0 2px 3px rgba(28, 23, 20, 0.35));
+  transition: transform var(--dur) var(--ease-out);
+}
+.tm-photo-pin:hover { transform: scale(1.12) translateY(-2px); z-index: 1000 !important; }
+
+/* ---- Cluster bubble (SVG teardrop built in js/map.js) ------------- */
+.tm-cluster-wrap { background: transparent; }
+.tm-cluster {
+  width: 36px;
+  height: 42px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.tm-cluster svg {
+  display: block;
+  filter: drop-shadow(0 2px 3px rgba(28, 23, 20, 0.4));
+}
+
+/* ---- Popups ------------------------------------------------------- */
+.leaflet-popup-content-wrapper {
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.leaflet-popup-content {
+  margin: 0;
+  width: 220px !important;
+  font-family: var(--font-ui);
+}
+.leaflet-popup-tip { box-shadow: var(--shadow-md); }
+
+.popup-thumb {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+.popup-thumb-fallback {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-align: center;
+}
+.popup-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--sp-3);
+}
+.popup-stop {
+  align-self: flex-start;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 2px 7px;
+  border-radius: var(--r-full);
+  margin-bottom: 2px;
+}
+.popup-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-base);
+  color: var(--ink);
+  word-break: break-word;
+}
+.popup-time {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+/* ---- Leaflet controls: align with the design system --------------- */
+.leaflet-bar a {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  color: var(--ink);
+  border-bottom-color: var(--line);
+}
+.leaflet-bar a:hover { background: var(--surface-2); color: var(--accent); }
+.leaflet-bar, .leaflet-control-layers {
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-md) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+.leaflet-control-layers-toggle { width: 40px; height: 40px; }
+.leaflet-control-layers-expanded {
+  padding: var(--sp-3) var(--sp-3) var(--sp-3) var(--sp-4);
+  font-family: var(--font-ui);
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+.leaflet-container { font-family: var(--font-ui); }
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.8) !important;
+  font-size: 0.65rem;
+}

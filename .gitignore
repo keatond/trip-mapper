@@ -9,3 +9,7 @@ Thumbs.db
 
 # Node (deps live in /tmp scratch dirs, never in the repo)
 node_modules/
+
+# Local-only session handoff (kept off the public repo by request)
+HANDOFF-zip-import-deploy.md
+qa/out/

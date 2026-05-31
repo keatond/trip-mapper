@@ -1,0 +1,121 @@
+/* css/states.css — import lifecycle feedback: status line + skip list.
+ * The status line shows a state-specific icon (spinner / check / warning)
+ * driven by the status--<kind> class set in js/app.js.
+ */
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  margin: 0;
+  min-height: 1.25rem;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+.status:empty { display: none; }
+
+.status__icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.7rem;
+  border-radius: var(--r-full);
+}
+.status__text { min-width: 0; }
+
+/* Info — a small neutral dot. */
+.status--info .status__icon::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: var(--r-full);
+  background: var(--muted);
+}
+
+/* Loading — a spinning ring in the brand accent. */
+.status--loading {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 25%, transparent);
+  color: var(--accent-hover);
+}
+.status--loading .status__icon {
+  border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-top-color: var(--accent);
+  animation: tm-spin 0.7s linear infinite;
+}
+@keyframes tm-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .status--loading .status__icon { animation-duration: 2s; }
+}
+
+/* Success — green check. */
+.status--success {
+  background: var(--ok-soft);
+  border-color: color-mix(in srgb, var(--ok) 25%, transparent);
+  color: var(--ok);
+}
+.status--success .status__icon {
+  background: var(--ok);
+  color: #fff;
+}
+.status--success .status__icon::before { content: "\2713"; } /* ✓ */
+
+/* Error / warning — amber-red bang. */
+.status--error {
+  background: var(--danger-soft);
+  border-color: color-mix(in srgb, var(--danger) 25%, transparent);
+  color: var(--danger);
+}
+.status--error .status__icon {
+  background: var(--danger);
+  color: #fff;
+}
+.status--error .status__icon::before { content: "!"; }
+
+/* ---- Skip list ---------------------------------------------------- */
+.skip-list {
+  list-style: none;
+  margin: 0;
+  padding: var(--sp-3);
+  border: 1px solid color-mix(in srgb, var(--warn) 30%, var(--line));
+  border-left: 3px solid var(--warn);
+  border-radius: var(--r-md);
+  background: var(--warn-soft);
+  font-size: var(--fs-xs);
+}
+.skip-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--sp-2);
+}
+.skip-head::before {
+  content: "!";
+  flex-shrink: 0;
+  width: 16px; height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--warn);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.7rem;
+}
+.skip-item {
+  color: var(--ink-2);
+  margin-top: var(--sp-1);
+  padding-left: calc(16px + var(--sp-2));
+  word-break: break-word;
+}

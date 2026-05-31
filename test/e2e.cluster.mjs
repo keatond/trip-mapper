@@ -1,8 +1,8 @@
 // Browser e2e for zoom-based marker clustering.
 //
 // Serves the app over python3 -m http.server, drives it with headless Chromium
-// (Puppeteer), and asserts that nearby photo markers collapse into one blue
-// pin-shaped cluster with a count when zoomed out, that the connecting route
+// (Puppeteer), and asserts that nearby photo markers collapse into one
+// brand-colored pin-shaped cluster with a count when zoomed out, that the connecting route
 // line stays visible at every zoom level (through the photos' own positions
 // while fully grouped, then through the visible parents as the cluster splits),
 // and that markers split into individuals when zoomed in.
@@ -111,9 +111,11 @@ try {
       sum: counts.reduce((a, c) => a + c, 0),
       individualMarkers: document.querySelectorAll("img.leaflet-marker-icon").length,
       routePaths: document.querySelectorAll("path.leaflet-interactive").length,
-      // Grouped-icon shape/colour: an SVG teardrop path (no round-bubble), filled blue.
+      // Grouped-icon shape/colour: an SVG teardrop path (no round-bubble),
+      // filled with the brand accent token.
       hasPinPath: !!pinPath,
       pinFill: pinPath ? pinPath.getAttribute("fill") : null,
+      accentToken: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim(),
       hasCircleBubble: !!document.querySelector(".tm-cluster[style*='border-radius']") ||
         [...bubbles].some((b) => getComputedStyle(b).borderRadius === "50%"),
     };
@@ -124,9 +126,9 @@ try {
   // Line stays visible even when fully grouped into one cluster (drawn through
   // the photos' own positions, since one cluster center is a single point).
   check("route line present while fully grouped", clustered.routePaths === 1, JSON.stringify(clustered));
-  // Grouped icon is a blue, pin-shaped (teardrop SVG) marker — not a round bubble.
+  // Grouped icon is a brand-colored, pin-shaped (teardrop SVG) marker — not a round bubble.
   check("grouped icon is an SVG pin (not a round bubble)", clustered.hasPinPath && !clustered.hasCircleBubble, JSON.stringify(clustered));
-  check("grouped icon is Leaflet-blue", clustered.pinFill === "#2A81CB", JSON.stringify(clustered));
+  check("grouped icon uses the brand accent token", clustered.pinFill && clustered.pinFill === clustered.accentToken, JSON.stringify(clustered));
 
   // --- Partially clustered: a cluster bubble AND standalone pin(s) coexist, so
   // the route line connects the >=2 visible parents. This is the "line present
